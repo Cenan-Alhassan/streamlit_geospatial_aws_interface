@@ -42,15 +42,26 @@ def fetch_file_structure(api_url: str, prefix: str) -> dict[str, Any]:
     return _call_backend(api_url, f"api/get-file-structure/{prefix}")
 
 def fetch_vector_data(api_url: str, s3_path: str) -> gpd.GeoDataFrame:
-    # Use our helper to get the data
-    geo_data_dict = _call_backend(api_url, f"api/get-data/{s3_path}")
+    """
+    Fetches the presigned URL from the backend and loads it into a GeoDataFrame.
+    """
+    # 1. Ask the backend for the data
+    response_dict = _call_backend(api_url, f"api/get-data/{s3_path}")
     
-    # Convert to GeoDataFrame
-    geojson_str = json.dumps(geo_data_dict)
-    gdf = gpd.read_file(StringIO(geojson_str))
+    # 2. Extract the Presigned URL
+    data_url = response_dict.get("url")
     
+    if not data_url:
+        raise ValueError("Backend did not return a valid URL.")
+        
+    # 3. Let GeoPandas download and parse the file directly from S3
+    # This happens on the Streamlit server, bypassing the Lambda limits
+    gdf = gpd.read_file(data_url)
+    
+    # 4. Ensure it is ready for web mapping
     if gdf.crs != "EPSG:4326":
         gdf = gdf.to_crs(epsg=4326)
+        
     return gdf
 
 def fetch_raster_metadata(api_url: str, s3_path: str) -> list[list[float]]:

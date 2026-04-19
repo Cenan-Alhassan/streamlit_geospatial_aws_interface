@@ -25,14 +25,14 @@ DEFAULT_PREFIX = "westminster_green_cover/"
 # Optional: Add paths to files you want automatically loaded on first boot (relative to the S3 bucket root)
 PRELOAD_FILES = [
     "westminster_green_cover/water_bodies.gpkg",
-    "westminster_green_cover/green_cover/green_cover.shp",
-    "westminster_green_cover/canopy_cover/canopy_cover.shp",
+    "westminster_green_cover/green_cover.gpkg",
+    "westminster_green_cover/canopy_cover.gpkg",
     "westminster_green_cover/westminster_boundary.gpkg",
     "westminster_green_cover/mbb_boundary.gpkg"
 ]
 
 RASTER_EXTENSIONS = (".tif", ".png")
-VECTOR_EXTENSIONS = (".geojson", ".gpkg", ".shp")
+VECTOR_EXTENSIONS = (".geojson", ".gpkg")
 
 def load_layer(api_url: str, s3_path: str):
     """Callback function to fetch data and add it to session state."""

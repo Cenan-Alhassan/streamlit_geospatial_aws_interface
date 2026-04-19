@@ -3,7 +3,6 @@ Data models and type definitions for the Geospatial Portfolio UI.
 """
 from typing import Any, Optional
 from pydantic import BaseModel, Field
-import geopandas as gpd
 
 class RasterBounds(BaseModel):
     """Expected response from the backend metadata endpoint."""
