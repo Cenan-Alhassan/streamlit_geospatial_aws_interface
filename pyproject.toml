@@ -1,0 +1,41 @@
+[project]
+name = "streamlit-map-visualiser"
+version = "0.1.0"
+description = "A dynamic Streamlit frontend for AWS S3 geospatial data visualization."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "streamlit>=1.30.0",
+    "requests>=2.31.0",
+    "geopandas>=0.14.0",
+    "leafmap>=0.30.0",
+    "folium>=0.15.0",
+    "pydantic>=2.5.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+# --- Ruff Configuration ---
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+src = ["src"]
+
+[tool.ruff.lint]
+# Select specific rules to enforce
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort (automatically sorts your imports)
+    "B",  # flake8-bugbear (catches common bugs)
+]
+ignore = []
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
