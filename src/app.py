@@ -19,7 +19,7 @@ import api_client
 
 # --- PORTFOLIO DEFAULTS ---
 # The AWS container will be running on this URL by default, but you can change it in the sidebar if needed
-DEFAULT_API_URL = "http://localhost:9000"
+DEFAULT_API_URL = "https://latdn3bjub.execute-api.eu-north-1.amazonaws.com/default"
 DEFAULT_PREFIX = "westminster_green_cover/"
 
 # Optional: Add paths to files you want automatically loaded on first boot (relative to the S3 bucket root)
