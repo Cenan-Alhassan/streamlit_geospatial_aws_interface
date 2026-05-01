@@ -7,6 +7,7 @@ import geopandas as gpd
 from io import StringIO
 from typing import Any
 import base64
+import streamlit as st
 
 def _call_backend(api_url: str, path: str, method: str = "GET") -> Any:
     """
@@ -38,9 +39,11 @@ def _call_backend(api_url: str, path: str, method: str = "GET") -> Any:
         response.raise_for_status()
         return response.json()
 
+@st.cache_data(show_spinner=False)
 def fetch_file_structure(api_url: str, prefix: str) -> dict[str, Any]:
     return _call_backend(api_url, f"api/get-file-structure/{prefix}")
 
+@st.cache_data(show_spinner=False)
 def fetch_vector_data(api_url: str, s3_path: str) -> gpd.GeoDataFrame:
     """
     Fetches the presigned URL from the backend and loads it into a GeoDataFrame.
@@ -55,7 +58,6 @@ def fetch_vector_data(api_url: str, s3_path: str) -> gpd.GeoDataFrame:
         raise ValueError("Backend did not return a valid URL.")
         
     # 3. Let GeoPandas download and parse the file directly from S3
-    # This happens on the Streamlit server, bypassing the Lambda limits
     gdf = gpd.read_file(data_url)
     
     # 4. Ensure it is ready for web mapping
@@ -64,12 +66,14 @@ def fetch_vector_data(api_url: str, s3_path: str) -> gpd.GeoDataFrame:
         
     return gdf
 
+@st.cache_data(show_spinner=False)
 def fetch_raster_metadata(api_url: str, s3_path: str) -> list[list[float]]:
     data = _call_backend(api_url, f"api/metadata/{s3_path}")
     # Extract bounds from the unwrapped body
     bounds = data.get("bounds")
     return [[bounds[1], bounds[0]], [bounds[3], bounds[2]]]
 
+@st.cache_data(show_spinner=False)
 def fetch_raster_image_b64(api_url: str, s3_path: str) -> str:
     """Fetches the PNG bytes and returns a Base64 Data URI."""
     if "localhost" in api_url:
